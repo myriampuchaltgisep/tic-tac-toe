@@ -1,9 +1,9 @@
 const {
-    initGameBoard
+    initBoard
   } = require('./ticTacToe');
   
   describe('Game Board', () => {
     it('must be created first thing', () => {
-      expect(initGameBoard()).toBe(' | |\n-+-+-\n | |\n-+-+-\n | |');
+      expect(initBoard()).toBe('Game Board Creation...\n | |\n-+-+-\n | |\n-+-+-\n | |\nBoard Created\nThe game will start with player X');
     });
   });
