@@ -1,7 +1,7 @@
-const getPlayingRow = (xPosition = [], oPosition = [], rowNumber = null) => {
+const playingRow = (xPosition = [], oPosition = [], rowNumber = null) => {
     if (xPosition.length > 1 && oPosition.length > 1) {
         const matrixPositions = [[0,1,2],[3,4,5],[6,7,8]];
-        const matrixPositionsByRow = matrixPositions[rowNumber-1] || [];
+        const matrixPositionsByRow = matrixPositions[rowNumber-1];
 
         const row = matrixPositionsByRow.map(position => {
             if (xPosition.includes(position)) {
@@ -17,7 +17,7 @@ const getPlayingRow = (xPosition = [], oPosition = [], rowNumber = null) => {
     return ' | | ';
 }
 
-const getSeparationRow = () => {
+const gridAxis = () => {
     return '-+-+-';
 }
 
@@ -30,25 +30,30 @@ const initBoard = (player) => {
     return `${boardCreation}\n${board}\n${boardCreated}\n${gameStart}`;
 }
 
-const gameWinner = (xPosition) => {
-    const verticalWinningPositions = JSON.stringify([[0,3,6],[1,4,7],[2,5,8]]);
-    const winningPlayer = verticalWinningPositions.includes(JSON.stringify(xPosition)) ? 'X' : null;
-    return `PLAYER ${winningPlayer} WON!`;
+const gameStarted = (player) => {
+    return `Player ${player}:`;
 }
 
 const gameBoard = (xPosition, oPosition) => {
-
-    const firstRow = getPlayingRow(xPosition, oPosition, 1);
-    const secondRow = getSeparationRow();
-    const thirdRow = getPlayingRow(xPosition, oPosition, 2);
-    const forthRow = getSeparationRow();
-    const fifthRow = getPlayingRow(xPosition, oPosition, 3);
+    const firstRow = playingRow(xPosition, oPosition, 1);
+    const secondRow = gridAxis();
+    const thirdRow = playingRow(xPosition, oPosition, 2);
+    const forthRow = gridAxis();
+    const fifthRow = playingRow(xPosition, oPosition, 3);
 
     return `${firstRow}\n${secondRow}\n${thirdRow}\n${forthRow}\n${fifthRow}`;
 }
 
-const gameStarted = (player) => {
-    return `Player ${player}:`;
+const gameWinner = (xPosition, oPosition) => {
+    let winningPlayer = '';
+    const verticalWinningPositions = JSON.stringify([[0,3,6],[1,4,7],[2,5,8]]);
+    if (verticalWinningPositions.includes(JSON.stringify(xPosition))) {
+        winningPlayer = 'X';
+    }
+    if (verticalWinningPositions.includes(JSON.stringify(oPosition))) {
+        winningPlayer = 'O';
+    }
+    return `PLAYER ${winningPlayer} WON!`;
 }
 
 const gamePlayed = (player, xPosition, oPosition) => {
