@@ -1,10 +1,14 @@
 const {
-  EMPTY_BOARD, GAME_CREATION, GAME_STARTS, VERTICAL_WINNING_SCENARIOS,
+  EMPTY_BOARD,
+  GAME_CREATION,
+  GAME_STARTS,
+  VERTICAL_WINNING_SCENARIOS,
+  HORIZONTAL_WINNING_SCENARIOS,
 } = require('./test/fixtures/boardScenarios');
 
 class Board {
   constructor() {
-    this.cells = EMPTY_BOARD;
+    this.cells = [...EMPTY_BOARD];
     this.winner = '';
   }
 
@@ -38,6 +42,11 @@ class Board {
     VERTICAL_WINNING_SCENARIOS.forEach((winningScenario) => {
       if (winningScenario.toString() === this.playersFinalPositions().playerX.toString()) {
         this.winner = 'X';
+      }
+    });
+    HORIZONTAL_WINNING_SCENARIOS.forEach((winningScenario) => {
+      if (winningScenario.toString() === this.playersFinalPositions().playerO.toString()) {
+        this.winner = 'O';
       }
     });
   }
