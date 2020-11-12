@@ -9,6 +9,9 @@ class Player {
       this.board.firstMove = this.pin;
     }
     this.board.cells[position] = this.pin;
+    this.board.turnsPlayed++;
+    console.log(`${this.pin}'s turn:`);
+    console.log(this.board.printBoard());
   }
 }
 

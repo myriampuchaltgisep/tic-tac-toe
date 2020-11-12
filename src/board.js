@@ -2,36 +2,43 @@ const {
   EMPTY_BOARD,
   GAME_CREATION,
   GAME_STARTS,
-  VERTICAL_WINNING_SCENARIOS,
-  HORIZONTAL_WINNING_SCENARIOS,
+  WINNING_COMBINATIONS,
 } = require('./test/fixtures/boardScenarios');
 
 class Board {
   constructor() {
     this.cells = [...EMPTY_BOARD];
     this.winner = '';
+    this.turnsPlayed = 0;
   }
 
   printBoard() {
-    return `${this.cells[0]}|${this.cells[1]}|${this.cells[2]}\n-+-+-\n${this.cells[3]}|${this.cells[4]}|${this.cells[5]}\n-+-+-\n${this.cells[6]}|${this.cells[7]}|${this.cells[8]}\n`;
+    const board = `${this.cells[0]}|${this.cells[1]}|${this.cells[2]}\n-+-+-\n${this.cells[3]}|${this.cells[4]}|${this.cells[5]}\n-+-+-\n${this.cells[6]}|${this.cells[7]}|${this.cells[8]}\n`;
+    this.decideWinner();
+
+    if (this.winner || this.turnsPlayed === 9) {
+      return `${board} ${this.announceWinner()}`;
+    }
+
+    return board;
   }
 
-  renderToConsole() {
+  startGame() {
     console.log(`${GAME_CREATION}\n${this.printBoard()}${GAME_STARTS}`);
   }
 
-  playersFinalPositions() {
+  playersPins() {
     const positions = {
-      playerX: [],
-      playerO: [],
+      X: [],
+      O: [],
     };
 
     this.cells.map((cell, index) => {
       if (cell === 'X') {
-        positions.playerX.push(index);
+        positions.X.push(index);
       }
       if (cell === 'O') {
-        positions.playerO.push(index);
+        positions.O.push(index);
       }
     });
 
@@ -39,21 +46,22 @@ class Board {
   }
 
   decideWinner() {
-    VERTICAL_WINNING_SCENARIOS.forEach((winningScenario) => {
-      if (winningScenario.toString() === this.playersFinalPositions().playerX.toString()) {
-        this.winner = 'X';
-      }
-    });
-    HORIZONTAL_WINNING_SCENARIOS.forEach((winningScenario) => {
-      if (winningScenario.toString() === this.playersFinalPositions().playerO.toString()) {
-        this.winner = 'O';
-      }
+    WINNING_COMBINATIONS.forEach((winningCombination) => {
+      Object.entries(this.playersPins()).forEach((player) => {
+        const playerPin = player[0];
+        const pinPositions = player[1];
+        if (winningCombination.every((value) => pinPositions.includes(value))) {
+          this.winner = playerPin;
+        }
+      });
     });
   }
 
   announceWinner() {
-    this.decideWinner();
-    console.log(`${this.winner} is the winner!`);
+    if (!this.winner && this.turnsPlayed === 9) {
+      return 'The game ended with a draw!';
+    }
+    return `Game Ended! ${this.winner} is the winner!`;
   }
 }
 
